@@ -9,5 +9,4 @@ class CommandController extends Controller
         $data =  request()->json()->all();
         return 'Hello ' . $data['value'];
     }
-    
 }
