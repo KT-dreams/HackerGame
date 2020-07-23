@@ -7,7 +7,7 @@ class CommandController extends Controller
 {
     const MESSAGE_OPTIONS = 'messageOptions';
 
-    public function uuid()
+    public function generate_uuid()
     {
         return Str::uuid();
     }
@@ -33,7 +33,7 @@ class CommandController extends Controller
             return [
                 'data' => '',
                 self::MESSAGE_OPTIONS => [
-                    'request_uuid' => $this->uuid(),
+                    'request_uuid' => $this->generate_uuid(),
                     'info' => 'Password for ' . $message['data']['username'] . ':',
                     'type' => 'password'
                 ]

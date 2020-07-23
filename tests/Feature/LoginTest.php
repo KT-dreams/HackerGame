@@ -83,7 +83,7 @@ class ApiTest extends TestCase
     {
         return $this->partialMock(CommandController::class, function ($mock) {
             $mock->shouldReceive('process')
-                ->shouldReceive('uuid')
+                ->shouldReceive('generate_uuid')
                 ->andReturn(self::UUID);
         });
     }
