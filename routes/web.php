@@ -17,4 +17,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('/login', 'CommandController@login');
+Route::post('/command/login', 'CommandController@login')->name('commandLogin');
