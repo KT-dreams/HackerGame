@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "c9d766b81f37327f7afbdbbadaa0e956",
+    "content-hash": "ff5369d7fd303443a64ed5133c706b1a",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -211,6 +211,59 @@
                 "sdk"
             ],
             "time": "2020-03-11T19:35:23+00:00"
+        },
+        {
+            "name": "baopham/dynamodb",
+            "version": "6.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/baopham/laravel-dynamodb.git",
+                "reference": "3c85a7b4e552274ad144688f9d4cbab46fba1f41"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/baopham/laravel-dynamodb/zipball/3c85a7b4e552274ad144688f9d4cbab46fba1f41",
+                "reference": "3c85a7b4e552274ad144688f9d4cbab46fba1f41",
+                "shasum": ""
+            },
+            "require": {
+                "aws/aws-sdk-php": "^3.0.0",
+                "illuminate/database": "5.1.* || 5.2.* || 5.3.* || 5.4.* || 5.5.* || 5.6.* || 5.7.* || 5.8.* || ^6.0 || ^7.0",
+                "illuminate/support": "5.1.* || 5.2.* || 5.3.* || 5.4.* || 5.5.* || 5.6.* || 5.7.* || 5.8.* || ^6.0 || ^7.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "~3.0 || ~5.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "BaoPham\\DynamoDb\\DynamoDbServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "BaoPham\\DynamoDb\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bao Pham",
+                    "email": "gbaopham@gmail.com"
+                }
+            ],
+            "description": "Eloquent syntax for DynamoDB",
+            "keywords": [
+                "aws",
+                "dynamodb",
+                "laravel"
+            ],
+            "time": "2020-03-23T04:46:28+00:00"
         },
         {
             "name": "brick/math",

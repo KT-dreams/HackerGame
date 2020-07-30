@@ -175,6 +175,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Aws\Laravel\AwsServiceProvider::class,
+        BaoPham\DynamoDb\DynamoDbServiceProvider::class,
 
     ],
 
