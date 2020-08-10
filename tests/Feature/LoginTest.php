@@ -1,38 +1,48 @@
 <?php
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
-use App\Http\Controllers\CommandController;
+use App\User;
+use App\Http\Controllers\UsersController;
 
-class ApiTest extends TestCase
+class LoginTest extends TestCase
 {
-
-    use RefreshDatabase;
-
     const COMMAND_LOGIN = 'commandLogin';
-    const MESSAGE_OPTIONS = 'messageOptions';
-    const REQUEST_UUID = 'request_uuid';
     const UUID = 'abcd-dddd-eeee-aaaa-xyzz';
-
+    private $user;
+    
+    protected function setUp(): void
+    {
+        parent::setUp();
+        
+        $this->user = new User();
+        $this->user->all()->each(function($user)
+        {
+            $user->delete();
+        });
+    }
+    
     /** @test */
     public function user_can_run_login_command()
     {
         $this->mockUuid();
         $this->json('POST', route(self::COMMAND_LOGIN), [
             'data' => [
-                'username' => 'TestUser'
+                'username' => 'TestUser',
             ]
         ])
             ->assertJson([
             'data' => '',
-            self::MESSAGE_OPTIONS => [
-                self::REQUEST_UUID => self::UUID,
+            'messageOptions' => [
+                 'request_uuid' => self::UUID,
                 'info' => 'Password for TestUser:',
                 'type' => 'password'
             ]
         ])
             ->assertStatus(200);
+            $this->assertArrayHasKey(self::UUID, Cache::get('requests'));
     }
 
     /** @test */
@@ -40,27 +50,31 @@ class ApiTest extends TestCase
     {
         $this->json('POST', route(self::COMMAND_LOGIN))
             ->assertJson([
-            'data' => 'Login requires <username>'
-        ])
-            ->assertJsonMissing([
-            'data' => 'username'
-        ])
-            ->assertStatus(200);
+            'data' => 'Command requires <username>'
+        ])->assertStatus(200);
+        $this->assertEmpty(Cache::get(self::UUID));
     }
 
     /** @test */
     public function user_can_enter_password()
     {
+        factory(User::class)->make([
+            'username' => 'TestUser',
+            'password' => Hash::make('qwerty')
+        ])->save();
+        
+        $this->mockCachedRequest();
+        Cache::put('requests', self::UUID); 
         $this->json('POST', route(self::COMMAND_LOGIN), [
-            self::MESSAGE_OPTIONS => [
-                self::REQUEST_UUID => self::UUID
+            'messageOptions' => [
+                 'request_uuid' => self::UUID
             ],
             'data' => [
                 'password' => 'qwerty'
             ]
         ])
             ->assertJson([
-            'data' => 'Hello'
+            'data' => 'You are logged in!'
         ])
             ->assertStatus(200);
     }
@@ -68,9 +82,10 @@ class ApiTest extends TestCase
     /** @test */
     public function password_is_required()
     {
+        $this->mockCachedRequest();
         $this->json('POST', route(self::COMMAND_LOGIN), [
-            self::MESSAGE_OPTIONS => [
-                self::REQUEST_UUID => self::UUID
+            'messageOptions' => [
+                 'request_uuid' => self::UUID
             ]
         ])
             ->assertJson([
@@ -81,10 +96,21 @@ class ApiTest extends TestCase
 
     public function mockUuid()
     {
-        return $this->partialMock(CommandController::class, function ($mock) {
-            $mock->shouldReceive('process')
-                ->shouldReceive('generate_uuid')
+        return $this->partialMock(UsersController::class, function ($mock) {
+            $mock->shouldReceive('generate_uuid')
                 ->andReturn(self::UUID);
+        });
+    }
+    
+    public function mockCachedRequest()
+    {
+        return $this->partialMock(UsersController::class, function($mock) {
+            $mock->shouldReceive('requestHasValidUuid')
+            ->andReturn([
+                'request_uuid' => self::UUID,
+                'command_step'=>'password',
+                'username' => 'TestUser'
+            ]);
         });
     }
 }
