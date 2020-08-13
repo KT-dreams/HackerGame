@@ -15,39 +15,18 @@ class UsersController extends Controller
     {
         if(!$request = $this->requestHasValidUuid())
         {
-           return $this->loginFistStep();
+            return $this->loginStepGetLogin();
         }
         
         if($request['command_step'] === 'password')
         {
-            return $this->loginSecondStep($request);
+            return $this->loginStepGetPassword($request);
         }
         
         return ['data' => 'Incorrect data'];
     }
     
-    public function requestHasValidUuid()
-    {
-        if(!$this->validateRequest(['messageOptions.request_uuid'=>'required']))
-        {
-            return false;
-        }
-        
-        if(!$request = Cache::get('requests')[request('messageOptions.request_uuid')])
-        {
-            return false;
-        }
-        return $request;
-    }
-    
-    public function validateRequest($validationOptions)
-    {
-        $validator = Validator::make(request()->all(), $validationOptions);
-        
-        return !$validator->fails();
-    }
-    
-    public function loginSecondStep($request=[])
+    private function loginStepGetPassword($request=[])
     {
         if(!$this->validateRequest(['data.password'=>'required']))
         {
@@ -56,30 +35,30 @@ class UsersController extends Controller
             ];
         }
         
-        if($user = User::where('username', $request['username'])->first())
+        $user = User::where('username', $request['username'])->first();
+        if(!$user)
         {
-            if($this->checkHash(request('data.password'), $user['password']))
-            {
-                $response = [
-                    'data' => 'You are logged in!'
-                ];
-            }
-            else
-            {
-                $response = [
-                    'data' => 'Incorrect password!'
-                ];
-            }
+            return [
+                'data' => 'Bad request!'
+            ];
+        }
+        
+        if($this->checkHash(request('data.password'), $user['password']))
+        {
+            $response = [
+                'data' => 'You are logged in!'
+            ];
         }
         else
         {
             $response = [
-                'data' => 'Bad request!'
+                'data' => 'Incorrect password!'
             ];
         }
         return $response;
     }
-    public function loginFistStep()
+    
+    public function loginStepGetLogin()
     {
         if(!$this->validateRequest(['data.username'=>'required']))
         {

@@ -33,25 +33,26 @@ class LoginTest extends TestCase
                 'username' => 'TestUser',
             ]
         ])
-            ->assertJson([
-            'data' => '',
-            'messageOptions' => [
+             ->assertJson([
+                 'data' => '',
+                 'messageOptions' => [
                  'request_uuid' => self::UUID,
                 'info' => 'Password for TestUser:',
                 'type' => 'password'
             ]
         ])
-            ->assertStatus(200);
-            $this->assertArrayHasKey(self::UUID, Cache::get('requests'));
+             ->assertStatus(200);
+        $this->assertArrayHasKey(self::UUID, Cache::get('requests'));
     }
 
     /** @test */
     public function username_is_required()
     {
         $this->json('POST', route(self::COMMAND_LOGIN))
-            ->assertJson([
-            'data' => 'Command requires <username>'
-        ])->assertStatus(200);
+             ->assertJson([
+                 'data' => 'Command requires <username>'
+                 
+             ])->assertStatus(200);
         $this->assertEmpty(Cache::get(self::UUID));
     }
 
@@ -63,7 +64,7 @@ class LoginTest extends TestCase
             'password' => Hash::make('qwerty')
         ])->save();
         
-        $this->mockCachedRequest();
+        $this->mockRequestHasValidUuid();
         Cache::put('requests', self::UUID); 
         $this->json('POST', route(self::COMMAND_LOGIN), [
             'messageOptions' => [
@@ -82,35 +83,37 @@ class LoginTest extends TestCase
     /** @test */
     public function password_is_required()
     {
-        $this->mockCachedRequest();
+        $this->mockRequestHasValidUuid();
         $this->json('POST', route(self::COMMAND_LOGIN), [
             'messageOptions' => [
                  'request_uuid' => self::UUID
             ]
         ])
-            ->assertJson([
-            'data' => 'Command requires <password>'
-        ])
-            ->assertStatus(200);
+             ->assertJson([
+                 'data' => 'Command requires <password>'
+                 
+             ])
+             ->assertStatus(200);
     }
 
     public function mockUuid()
     {
         return $this->partialMock(UsersController::class, function ($mock) {
             $mock->shouldReceive('generate_uuid')
-                ->andReturn(self::UUID);
+                 ->andReturn(self::UUID);
         });
     }
     
-    public function mockCachedRequest()
+    public function mockRequestHasValidUuid()
     {
         return $this->partialMock(UsersController::class, function($mock) {
             $mock->shouldReceive('requestHasValidUuid')
-            ->andReturn([
-                'request_uuid' => self::UUID,
-                'command_step'=>'password',
-                'username' => 'TestUser'
-            ]);
+                 ->andReturn([
+                     'request_uuid' => self::UUID,
+                     'command_step'=>'password',
+                     'username' => 'TestUser'
+                     
+                 ]);
         });
     }
 }
