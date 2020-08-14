@@ -9,8 +9,6 @@ use Illuminate\Support\Facades\Validator;
 
 class UsersController extends Controller
 {
-    const MESSAGE_OPTIONS = 'messageOptions';
-    
     public function login()
     {
         if(!$request = $this->requestHasValidUuid())
@@ -43,7 +41,7 @@ class UsersController extends Controller
             ];
         }
         
-        if($this->checkHash(request('data.password'), $user['password']))
+        if(Hash::check(request('data.password'), $user['password']))
         {
             $response = [
                 'data' => 'You are logged in!'
@@ -58,7 +56,7 @@ class UsersController extends Controller
         return $response;
     }
     
-    public function loginStepGetLogin()
+    private function loginStepGetLogin()
     {
         if(!$this->validateRequest(['data.username'=>'required']))
         {
@@ -67,7 +65,7 @@ class UsersController extends Controller
             ];
         }
         
-        $uuid = $this->generate_uuid();
+        $uuid = $this->generateUuid();
         
         $cachedRequests = Cache::get('requests', []);
         $cachedRequests[$uuid] = [
@@ -80,25 +78,11 @@ class UsersController extends Controller
         
         return [
             'data' => '',
-            self::MESSAGE_OPTIONS => [
+            'messageOptions' => [
                 'request_uuid' => $uuid,
                 'info' => 'Password for ' . request('data.username') . ':',
                 'type' => 'password'
             ]
         ];
-    }
-    
-    public function generate_uuid()
-    {
-        return Str::uuid()->toString();
-    }
-    
-    public function checkHash($password, $hashedPassword)
-    {
-        if(!Hash::check($password, $hashedPassword))
-        {
-            return false;
-        }
-        return true;
     }
 }

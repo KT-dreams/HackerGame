@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 
@@ -26,5 +27,10 @@ trait ConsoleCommandsHelpers {
         $validator = Validator::make(request()->all(), $validationOptions);
         
         return !$validator->fails();
+    }
+    
+    public function generateUuid()
+    {
+        return Str::uuid()->toString();
     }
 }
