@@ -11,7 +11,7 @@ class UsersController extends Controller
 {
     public function login()
     {
-        if(!$request = $this->requestHasValidUuid())
+        if(!$request = $this->getContext())
         {
             return $this->loginStepGetLogin();
         }

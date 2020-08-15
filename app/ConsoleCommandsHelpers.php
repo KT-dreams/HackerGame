@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Validator;
 
 trait ConsoleCommandsHelpers {
 
-    public function requestHasValidUuid()
+    public function getContext()
     {
         if(!$this->validateRequest(['messageOptions.request_uuid'=>'required']))
         {

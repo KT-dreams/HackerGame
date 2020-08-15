@@ -61,7 +61,7 @@ class LoginTest extends TestCase
             'password' => Hash::make('qwerty')
         ])->save();
         
-        $this->mockRequestHasValidUuid();
+        $this->mockGetContext();
         Cache::put('requests', self::UUID); 
         $this->json('POST', route(self::COMMAND_LOGIN), [
             'messageOptions' => [
@@ -78,7 +78,7 @@ class LoginTest extends TestCase
     /** @test */
     public function password_is_required()
     {
-        $this->mockRequestHasValidUuid();
+        $this->mockGetContext();
         $this->json('POST', route(self::COMMAND_LOGIN), [
             'messageOptions' => [
                  'request_uuid' => self::UUID
@@ -96,10 +96,10 @@ class LoginTest extends TestCase
         });
     }
     
-    private function mockRequestHasValidUuid()
+    private function mockGetContext()
     {
         return $this->partialMock(UsersController::class, function($mock) {
-            $mock->shouldReceive('requestHasValidUuid')
+            $mock->shouldReceive('getContext')
                  ->andReturn([
                      'request_uuid' => self::UUID,
                      'command_step'=>'password',
