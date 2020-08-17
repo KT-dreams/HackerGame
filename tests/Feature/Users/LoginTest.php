@@ -35,7 +35,7 @@ class LoginTest extends TestCase
         ])->assertJson([
             'data' => '',
             'messageOptions' => [
-                'request_uuid' => self::UUID,
+                'requestUuid' => self::UUID,
                 'info' => 'Password for TestUser:',
                 'type' => 'password'
             ]
@@ -81,7 +81,7 @@ class LoginTest extends TestCase
         $this->mockGetContext();
         $this->json('POST', route(self::COMMAND_LOGIN), [
             'messageOptions' => [
-                 'request_uuid' => self::UUID
+                 'requestUuid' => self::UUID
             ]
         ])->assertJson([
              'data' => 'Command requires <password>'
@@ -101,8 +101,8 @@ class LoginTest extends TestCase
         return $this->partialMock(UsersController::class, function($mock) {
             $mock->shouldReceive('getContext')
                  ->andReturn([
-                     'request_uuid' => self::UUID,
-                     'command_step'=>'password',
+                     'requestUuid' => self::UUID,
+                     'commandStep'=>'password',
                      'username' => 'TestUser'
                  ]);
         });

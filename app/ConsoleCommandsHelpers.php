@@ -10,12 +10,12 @@ trait ConsoleCommandsHelpers {
 
     public function getContext()
     {
-        if(!$this->validateRequest(['messageOptions.request_uuid'=>'required']))
+        if(!$this->validateRequest(['messageOptions.requestUuid'=>'required']))
         {
             return false;
         }
         
-        if(!$request = Cache::get('requests')[request('messageOptions.request_uuid')])
+        if(!$request = Cache::get('requests')[request('messageOptions.requestUuid')])
         {
             return false;
         }
