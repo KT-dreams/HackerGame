@@ -1,0 +1,12 @@
+tests/
+.git* 
+.env
+.env.testing
+.env.example
+.buildpath
+.editorconfig
+.project
+.settings/
+.phpunit.result.cache
+/public/storage
+/vendor

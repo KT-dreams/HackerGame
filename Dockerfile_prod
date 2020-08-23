@@ -1,0 +1,15 @@
+FROM php:7.4-fpm-alpine
+
+WORKDIR /usr/src/app
+COPY . .
+
+RUN mv .env.prod .env
+RUN apk update
+RUN apk add zip unzip
+RUN apk add wget
+RUN wget https://raw.githubusercontent.com/composer/getcomposer.org/76a7060ccb93902cd7576b67264ad91c8a2700e2/web/installer -O - -q | php -- --quiet 
+RUN mv composer.phar /usr/local/bin/composer
+RUN composer install
+
+EXPOSE 8000
+ENTRYPOINT php artisan serve --host 0.0.0.0 --port=8000

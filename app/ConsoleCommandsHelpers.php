@@ -14,12 +14,8 @@ trait ConsoleCommandsHelpers {
         {
             return false;
         }
-        
-        if(!$request = Cache::get('requests')[request('messageOptions.requestUuid')])
-        {
-            return false;
-        }
-        return $request;
+
+        return Cache::get('requests')[request('messageOptions.requestUuid')] ?? False;
     }
     
     public function validateRequest($validationOptions)

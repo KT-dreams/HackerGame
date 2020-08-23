@@ -3,9 +3,7 @@
 /public/storage
 /storage/*.key
 /vendor
-.env
-.env.testing
-.env.backup
+.env*
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
@@ -15,3 +13,4 @@ yarn-error.log
 .editorconfig
 .project
 .settings/
+Dockerfile_prod
