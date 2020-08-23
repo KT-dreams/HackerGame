@@ -11,5 +11,4 @@ RUN wget https://raw.githubusercontent.com/composer/getcomposer.org/76a7060ccb93
 RUN mv composer.phar /usr/local/bin/composer
 RUN composer install
 
-EXPOSE 8000
-ENTRYPOINT php artisan serve --host 0.0.0.0 --port=8000
+ENTRYPOINT php artisan key:generate && php artisan serve --host 0.0.0.0 --port=8000
